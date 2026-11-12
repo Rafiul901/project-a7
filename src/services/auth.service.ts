@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import { extractData } from "@/lib/api-response";
 import type {
   LoginPayload,
   LoginResponse,
@@ -9,12 +10,12 @@ import type {
 export const loginUser = async (
   payload: LoginPayload
 ): Promise<LoginResponse> => {
-  const response = await axiosInstance.post<LoginResponse>(
+  const response = await axiosInstance.post(
     "/auth/login",
     payload
   );
 
-  return response.data;
+  return extractData<LoginResponse>(response.data);
 };
 
 export const registerUser = async (

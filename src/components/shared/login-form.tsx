@@ -18,7 +18,23 @@ import {
 
 export default function LoginForm() {
   const { login, isLoggingIn } = useAuth();
-
+const demoAccounts = [
+  {
+    label: "Customer Demo",
+    email: process.env.NEXT_PUBLIC_DEMO_CUSTOMER_EMAIL,
+    password: process.env.NEXT_PUBLIC_DEMO_CUSTOMER_PASSWORD,
+  },
+  {
+    label: "Delivery Agent Demo",
+    email: process.env.NEXT_PUBLIC_DEMO_AGENT_EMAIL,
+    password: process.env.NEXT_PUBLIC_DEMO_AGENT_PASSWORD,
+  },
+  {
+    label: "Admin Demo",
+    email: process.env.NEXT_PUBLIC_DEMO_ADMIN_EMAIL,
+    password: process.env.NEXT_PUBLIC_DEMO_ADMIN_PASSWORD,
+  },
+];
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -82,6 +98,32 @@ export default function LoginForm() {
           >
             {isLoggingIn ? "Signing in..." : "Sign In"}
           </Button>
+
+          <div className="space-y-2">
+  <p className="text-center text-sm font-medium text-muted-foreground">
+    Or try a demo account
+  </p>
+
+  {demoAccounts.map((account) => (
+    <Button
+      key={account.label}
+      type="button"
+      variant="outline"
+      className="w-full"
+      disabled={
+        isLoggingIn || !account.email || !account.password
+      }
+      onClick={() =>
+        login({
+          email: account.email!,
+          password: account.password!,
+        })
+      }
+    >
+      {account.label}
+    </Button>
+  ))}
+</div>
 
           <p className="text-center text-sm text-muted-foreground">
             Do not have an account?{" "}
