@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore  } from "react";
 import { useRouter } from "next/navigation";
-import { useSyncExternalStore } from "react";
+
 import { useAuthStore } from "@/store/auth.store";
 import type { UserRole } from "@/types/auth.types";
 
