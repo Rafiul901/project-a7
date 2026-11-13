@@ -4,6 +4,10 @@ import type {
   Parcel,
   ParcelStatus,
 } from "@/types/parcel.types";
+import { extractData } from "@/lib/api-response";
+import type { PaginationMeta } from "@/types/api.types";
+
+
 
 export const createParcel = async (
   payload: CreateParcelPayload,
@@ -22,24 +26,32 @@ export const createParcel = async (
   return response.data;
 };
 
+interface MyParcelsResponse {
+  parcels: Parcel[];
+  meta: PaginationMeta;
+}
+
 export const getMyParcels = async (
   token: string,
   page = 1,
   limit = 10,
   status?: ParcelStatus
-) => {
-  const response = await axiosInstance.get("/parcels/my", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    params: {
-      page,
-      limit,
-      status,
-    },
-  });
+): Promise<MyParcelsResponse> => {
+  const response = await axiosInstance.get(
+    "/parcels/my",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        page,
+        limit,
+        status,
+      },
+    }
+  );
 
-  return response.data;
+  return extractData<MyParcelsResponse>(response.data);
 };
 
 export const getParcelById = async (
