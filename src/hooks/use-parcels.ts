@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import {
   cancelParcel,
   createParcel,
-  getMyParcels,
+  getMyParcels, getParcelById
 } from "@/services/parcel.service";
 
 import { useAuthStore } from "@/store/auth.store";
@@ -74,16 +74,36 @@ export function useCancelParcel() {
     mutationFn: (parcelId: number) =>
       cancelParcel(parcelId, accessToken!),
 
-    onSuccess: () => {
-      toast.success("Parcel cancelled successfully!");
+onSuccess: () => {
+  toast.success("Parcel cancelled successfully!");
 
-      queryClient.invalidateQueries({
-        queryKey: ["my-parcels"],
-      });
-    },
+  queryClient.invalidateQueries({
+    queryKey: ["my-parcels"],
+  });
+
+  queryClient.invalidateQueries({
+    queryKey: ["parcel"],
+  });
+},
 
     onError: () => {
       toast.error("Failed to cancel parcel.");
     },
+  });
+}
+
+
+export function useParcelDetails(parcelId: number) {
+  const accessToken = useAuthStore(
+    (state) => state.accessToken
+  );
+
+  return useQuery({
+    queryKey: ["parcel", parcelId],
+
+    queryFn: () =>
+      getParcelById(parcelId, accessToken!),
+
+    enabled: !!accessToken && parcelId > 0,
   });
 }

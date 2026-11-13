@@ -2,12 +2,14 @@ import axiosInstance from "@/lib/axios";
 import type {
   CheckoutResponse,
   CreatePaymentPayload,
+  MyPaymentsResponse,
   Payment,
 } from "@/types/payment.types";
-
+import { extractData } from "@/lib/api-response";
 const authHeaders = (token: string) => ({
   Authorization: `Bearer ${token}`,
 });
+
 
 export const createPayment = async (
   payload: CreatePaymentPayload,
@@ -19,7 +21,7 @@ export const createPayment = async (
     { headers: authHeaders(token) }
   );
 
-  return response.data;
+return extractData<Payment>(response.data);
 };
 
 export const createCheckoutSession = async (
@@ -32,7 +34,7 @@ export const createCheckoutSession = async (
     { headers: authHeaders(token) }
   );
 
-  return response.data;
+return extractData<CheckoutResponse>(response.data);
 };
 
 export const getPaymentById = async (
@@ -44,7 +46,7 @@ export const getPaymentById = async (
     { headers: authHeaders(token) }
   );
 
-  return response.data;
+ return extractData<Payment>(response.data);
 };
 
 export const getMyPayments = async (
@@ -52,11 +54,11 @@ export const getMyPayments = async (
   page = 1,
   limit = 10,
   status?: string
-) => {
+): Promise<MyPaymentsResponse> => {
   const response = await axiosInstance.get("/payments/my", {
     headers: authHeaders(token),
     params: { page, limit, status },
   });
 
-  return response.data;
+  return extractData<MyPaymentsResponse>(response.data);
 };

@@ -1,11 +1,12 @@
 import axiosInstance from "@/lib/axios";
+import { extractData } from "@/lib/api-response";
 import type { ParcelTracking } from "@/types/tracking.types";
 
 export const getParcelTracking = async (
   parcelId: number,
   token: string
 ): Promise<ParcelTracking[]> => {
-  const response = await axiosInstance.get<ParcelTracking[]>(
+  const response = await axiosInstance.get(
     `/parcels/${parcelId}/tracking`,
     {
       headers: {
@@ -14,5 +15,5 @@ export const getParcelTracking = async (
     }
   );
 
-  return response.data;
+  return extractData<ParcelTracking[]>(response.data);
 };

@@ -61,9 +61,13 @@ export function useCreatePayment() {
     onSuccess: () => {
       toast.success("Payment created successfully!");
 
-      queryClient.invalidateQueries({
-        queryKey: ["my-payments"],
-      });
+     queryClient.invalidateQueries({
+  queryKey: ["my-payments"],
+});
+
+queryClient.invalidateQueries({
+  queryKey: ["payment"],
+});
     },
 
     onError: () => {

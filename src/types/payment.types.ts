@@ -1,3 +1,5 @@
+import type { PaginationMeta } from "@/types/api.types";
+
 export type PaymentStatus =
   | "PENDING"
   | "PAID"
@@ -22,4 +24,9 @@ export interface CreatePaymentPayload {
 export interface CheckoutResponse {
   sessionId: string;
   checkoutUrl: string;
+}
+
+export interface MyPaymentsResponse {
+  payments: Payment[];
+  meta: PaginationMeta;
 }

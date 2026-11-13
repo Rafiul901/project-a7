@@ -6,7 +6,7 @@ import type {
 } from "@/types/parcel.types";
 import { extractData } from "@/lib/api-response";
 import type { PaginationMeta } from "@/types/api.types";
-
+;
 
 
 export const createParcel = async (
@@ -58,7 +58,7 @@ export const getParcelById = async (
   id: number,
   token: string
 ): Promise<Parcel> => {
-  const response = await axiosInstance.get<Parcel>(
+  const response = await axiosInstance.get(
     `/parcels/${id}`,
     {
       headers: {
@@ -67,7 +67,7 @@ export const getParcelById = async (
     }
   );
 
-  return response.data;
+  return extractData<Parcel>(response.data);
 };
 
 export const cancelParcel = async (
