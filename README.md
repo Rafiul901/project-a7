@@ -1,36 +1,240 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SwiftDrop – Courier & Logistics Management Platform
 
-## Getting Started
+A full-stack courier and logistics management application built with Next.js, TypeScript, Express.js, PostgreSQL, and Prisma. SwiftDrop provides separate dashboards for customers, delivery agents, and administrators to manage parcel deliveries, tracking, and payments.
 
-First, run the development server:
+<p align="center">
+  <a href="https://project-7-teal.vercel.app/">
+    <strong>🚀 View Live Application</strong>
+  </a>
+</p>
+
+## 🌐 Live Demo
+
+**Frontend:** https://project-7-teal.vercel.app/
+
+**Backend API:** https://project-a6.vercel.app/api/v1
+
+## ✨ Features
+
+### 👤 Customer
+- Customer registration and login
+- Customer dashboard
+- Multi-step parcel creation form
+- View and manage personal parcels
+- Filter parcels by delivery status
+- Parcel tracking history
+- Cancel eligible pending parcels
+- View payment history and payment details
+- Stripe Checkout integration
+
+### 🚚 Delivery Agent
+- Delivery agent authentication
+- Dedicated delivery dashboard
+- Browse available parcels
+- Assign parcels to themselves
+- View assigned parcels
+- Filter assigned parcels by status
+- Manage delivery progress
+- Update parcel delivery statuses
+
+### 🛠️ Administrator
+- Administrator dashboard
+- View total users and parcels
+- Parcel status analytics chart
+- Manage and view registered users
+- Browse all parcel records
+- View system audit logs
+- Filter and paginate records
+
+## 🧰 Technologies Used
+
+### Frontend
+- Next.js 16 (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- TanStack Query
+- Zustand
+- Axios
+- React Hook Form
+- Zod
+- Recharts
+- Lucide React
+- Sonner
+
+### Backend
+- Node.js
+- Express.js
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- JWT Authentication
+- Stripe
+
+### Deployment
+- Vercel
+
+## 🏗️ Application Architecture
+
+The application follows a frontend-backend architecture.
+
+- **Frontend:** Next.js application responsible for the user interface, routing, authentication state, and API communication.
+- **Backend:** Express REST API responsible for authentication, business logic, authorization, parcel management, and payments.
+- **Database:** PostgreSQL for persistent data storage, managed through Prisma ORM.
+- **Payment Gateway:** Stripe Checkout for online payments.
+
+## 🔐 Authentication & Authorization
+
+SwiftDrop supports three user roles:
+
+| Role | Access |
+|---|---|
+| CUSTOMER | Customer dashboard and personal parcel/payment operations |
+| DELIVERY_AGENT | Available parcels and assigned delivery management |
+| ADMIN | Administrative dashboard, users, parcels, and audit logs |
+
+JWT-based authentication is used for protected API requests, with role-based authorization enforced by the backend.
+
+## 📦 Parcel Statuses
+
+- PENDING
+- PICKED_UP
+- IN_TRANSIT
+- OUT_FOR_DELIVERY
+- DELIVERED
+- CANCELLED
+
+## 💳 Payment Integration
+
+Stripe Checkout is integrated for online parcel payments.
+
+The payment workflow includes:
+1. Creating a payment record.
+2. Creating a Stripe Checkout session.
+3. Redirecting the customer to Stripe Checkout.
+4. Handling payment success and cancellation routes.
+5. Updating payment status through the backend Stripe webhook.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone YOUR_FRONTEND_GITHUB_REPOSITORY_URL
+```
+
+### 2. Navigate to the project directory
+
+```bash
+cd YOUR_FRONTEND_REPOSITORY_NAME
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure environment variables
+
+Create a `.env.local` file in the project root.
+
+```env
+NEXT_PUBLIC_API_URL=https://project-a6.vercel.app/api/v1
+
+NEXT_PUBLIC_DEMO_CUSTOMER_EMAIL=your_demo_customer_email
+NEXT_PUBLIC_DEMO_CUSTOMER_PASSWORD=your_demo_customer_password
+
+NEXT_PUBLIC_DEMO_AGENT_EMAIL=your_demo_agent_email
+NEXT_PUBLIC_DEMO_AGENT_PASSWORD=your_demo_agent_password
+
+NEXT_PUBLIC_DEMO_ADMIN_EMAIL=your_demo_admin_email
+NEXT_PUBLIC_DEMO_ADMIN_PASSWORD=your_demo_admin_password
+```
+
+Use dedicated demo-account credentials. Never put personal credentials, Stripe secret keys, or other private secrets in frontend environment variables.
+
+### 5. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 6. Build for production
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+my-app/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── (public)/
+│   │   ├── customer/
+│   │   ├── agent/
+│   │   ├── admin/
+│   │   └── payment/
+│   ├── components/
+│   │   ├── shared/
+│   │   ├── layouts/
+│   │   └── ui/
+│   ├── hooks/
+│   ├── lib/
+│   ├── providers/
+│   ├── services/
+│   ├── store/
+│   └── types/
+├── .env.local
+├── package.json
+└── README.md
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌍 Deployment
 
-## Deploy on Vercel
+The frontend is deployed on Vercel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Live URL:** https://project-7-teal.vercel.app/
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎯 Project Objectives
+
+This project demonstrates practical full-stack development concepts, including:
+
+- Building responsive user interfaces
+- Role-based dashboards
+- REST API integration
+- JWT authentication
+- State management
+- Form validation
+- Database-driven application workflows
+- Stripe payment integration
+- Production deployment
+
+## 👨‍💻 Author
+
+Developed as part of Programming Hero Level 2 – Assignment 7.
+
+**Project Name:** SwiftDrop  
+**Project Type:** Courier & Logistics Management Platform
+
+---
+
+<p align="center">
+  <strong>SwiftDrop – Making parcel delivery management simpler.</strong>
+</p>
