@@ -1,9 +1,16 @@
 import axiosInstance from "@/lib/axios";
 import type { ParcelStatus } from "@/types/parcel.types";
-
+import { extractData } from "@/lib/api-response";
+import type { PaginationMeta } from "@/types/api.types";
+import type { Parcel } from "@/types/parcel.types";
 const authHeaders = (token: string) => ({
   Authorization: `Bearer ${token}`,
 });
+
+interface AgentParcelsResponse {
+  parcels: Parcel[];
+  meta: PaginationMeta;
+}
 
 export const getAvailableParcels = async (
   token: string,
@@ -15,7 +22,7 @@ export const getAvailableParcels = async (
     params: { page, limit },
   });
 
-  return response.data;
+  return extractData<AgentParcelsResponse>(response.data);
 };
 
 export const getAssignedParcels = async (
@@ -29,7 +36,7 @@ export const getAssignedParcels = async (
     params: { page, limit, status },
   });
 
-  return response.data;
+return extractData<AgentParcelsResponse>(response.data);
 };
 
 export const assignParcel = async (

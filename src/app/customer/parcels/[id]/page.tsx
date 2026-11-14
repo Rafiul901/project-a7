@@ -1,9 +1,10 @@
 "use client";
 
-
+import { useCreatePayment } from "@/hooks/use-payments";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  CreditCard,
   MapPin,
   Package,
   Phone,
@@ -44,7 +45,9 @@ export default function ParcelDetailsPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
 
-  const parcelId = Number(params.id);
+  // Safely handle params incase it's parsed as an array
+  const rawId = params?.id;
+  const parcelId = Number(Array.isArray(rawId) ? rawId[0] : rawId);
 
   const {
     data: parcel,
@@ -53,6 +56,18 @@ export default function ParcelDetailsPage() {
   } = useParcelDetails(parcelId);
 
   const cancelMutation = useCancelParcel();
+  const createPaymentMutation = useCreatePayment();
+
+  const handleCreatePayment = () => {
+    createPaymentMutation.mutate(
+      { parcelId },
+      {
+        onSuccess: (payment) => {
+          router.push(`/customer/payments/${payment.id}`);
+        },
+      }
+    );
+  };
 
   const handleCancel = () => {
     const confirmed = window.confirm(
@@ -85,9 +100,9 @@ export default function ParcelDetailsPage() {
   if (isLoading) {
     return (
       <div className="space-y-4 p-6">
-        <div className="h-8 w-48 animate-pulse bg-muted" />
-        <div className="h-48 animate-pulse bg-muted" />
-        <div className="h-48 animate-pulse bg-muted" />
+        <div className="h-8 w-48 animate-pulse bg-muted rounded" />
+        <div className="h-48 animate-pulse bg-muted rounded" />
+        <div className="h-48 animate-pulse bg-muted rounded" />
       </div>
     );
   }
@@ -114,7 +129,7 @@ export default function ParcelDetailsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4 md:p-8">
       <div>
-       <Button variant="outline" onClick={() => router.back()}>
+        <Button variant="outline" onClick={() => router.back()}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -138,8 +153,8 @@ export default function ParcelDetailsPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>
-              <Package className="mr-2 inline h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Package className="h-4 w-4" />
               Receiver Information
             </CardTitle>
             <CardDescription>
@@ -165,8 +180,8 @@ export default function ParcelDetailsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>
-              <MapPin className="mr-2 inline h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <MapPin className="h-4 w-4" />
               Delivery Route
             </CardTitle>
             <CardDescription>
@@ -191,7 +206,7 @@ export default function ParcelDetailsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Parcel Information</CardTitle>
+            <CardTitle className="text-base">Parcel Information</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -217,7 +232,7 @@ export default function ParcelDetailsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Parcel Timeline</CardTitle>
+            <CardTitle className="text-base">Parcel Timeline</CardTitle>
             <CardDescription>
               Important parcel dates.
             </CardDescription>
@@ -242,13 +257,24 @@ export default function ParcelDetailsPage() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-     <Button
-  onClick={() =>
-    router.push(`/customer/parcels/${parcel.id}/tracking`)
-  }
->
-  Track Parcel
-</Button>
+        <Button
+          onClick={() =>
+            router.push(`/customer/parcels/${parcel.id}/tracking`)
+          }
+        >
+          Track Parcel
+        </Button>
+
+        {/* Payment Button (Added back since useCreatePayment was imported) */}
+        {parcel.status === "PENDING" && (
+          <Button
+            onClick={handleCreatePayment}
+            disabled={createPaymentMutation.isPending}
+          >
+            <CreditCard className="mr-2 h-4 w-4" />
+            {createPaymentMutation.isPending ? "Processing..." : "Pay Now"}
+          </Button>
+        )}
 
         {parcel.status === "PENDING" && (
           <Button
@@ -260,12 +286,12 @@ export default function ParcelDetailsPage() {
           </Button>
         )}
 
-<Button
-  variant="outline"
-  onClick={() => router.push("/customer/parcels")}
->
-  All Parcels
-</Button>
+        <Button
+          variant="outline"
+          onClick={() => router.push("/customer/parcels")}
+        >
+          All Parcels
+        </Button>
       </div>
     </div>
   );

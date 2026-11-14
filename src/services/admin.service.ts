@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios";
-
+import { extractData } from "@/lib/api-response";
 const authHeaders = (token: string) => ({
   Authorization: `Bearer ${token}`,
 });
@@ -15,7 +15,7 @@ export const getAllUsers = async (
     params: { page, limit, role },
   });
 
-  return response.data;
+return extractData(response.data);
 };
 
 export const getAllParcels = async (
@@ -29,7 +29,7 @@ export const getAllParcels = async (
     params: { page, limit, status },
   });
 
-  return response.data;
+return extractData(response.data);
 };
 
 export const getAuditLogs = async (
@@ -43,6 +43,5 @@ export const getAuditLogs = async (
     headers: authHeaders(token),
     params: { page, limit, action, entity },
   });
-
-  return response.data;
+return extractData(response.data);
 };

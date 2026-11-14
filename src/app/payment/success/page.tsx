@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -29,15 +29,27 @@ function getStoredPaymentId(): number | null {
 export default function PaymentSuccessPage() {
   const router = useRouter();
 
-  // ✅ Reads sessionStorage synchronously on mount without useEffect
+
   const [paymentId] = useState<number | null>(getStoredPaymentId);
 
-  const {
-    data: payment,
-    isLoading,
-    isError,
-    refetch,
-  } = usePaymentDetails(paymentId ?? 0);
+const {
+  data: payment,
+  isLoading,
+  isError,
+  refetch,
+} = usePaymentDetails(paymentId ?? 0);
+
+useEffect(() => {
+  if (!paymentId || payment?.status !== "PENDING") {
+    return;
+  }
+
+  const intervalId = setInterval(() => {
+    refetch();
+  }, 5000);
+
+  return () => clearInterval(intervalId);
+}, [paymentId, payment?.status, refetch]);
 
   if (paymentId !== null && isLoading) {
     return (
