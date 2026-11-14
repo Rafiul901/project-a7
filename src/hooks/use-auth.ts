@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
@@ -26,15 +25,19 @@ export function useAuth() {
 
     onSuccess: (data) => {
       setAuth(data.user, data.accessToken);
+      
+      // Set role cookie for Next.js routing/middleware access
+      document.cookie = `courier-role=${data.user.role}; path=/; max-age=86400; samesite=lax`;
+      
       toast.success("Login successful!");
 
-     const dashboardRoutes = {
-  CUSTOMER: "/customer/dashboard",
-  DELIVERY_AGENT: "/agent/dashboard",
-  ADMIN: "/admin/dashboard",
-};
+      const dashboardRoutes = {
+        CUSTOMER: "/customer/dashboard",
+        DELIVERY_AGENT: "/agent/dashboard",
+        ADMIN: "/admin/dashboard",
+      };
 
-router.push(dashboardRoutes[data.user.role]);
+      router.push(dashboardRoutes[data.user.role]);
     },
 
     onError: () => {
@@ -57,6 +60,10 @@ router.push(dashboardRoutes[data.user.role]);
 
   const logout = () => {
     logoutStore();
+    
+    // Clear the role cookie on logout
+    document.cookie = "courier-role=; path=/; max-age=0; samesite=lax";
+    
     toast.success("Logged out successfully.");
     router.push("/login");
   };
