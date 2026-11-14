@@ -12,7 +12,7 @@ A full-stack courier and logistics management application built with Next.js, Ty
 
 **Frontend:** https://project-7-teal.vercel.app/
 
-**Backend API:** https://project-a6.vercel.app/api/v1
+**Backend API:** https://project-a6.vercel.app
 
 ## ✨ Features
 
