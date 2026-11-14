@@ -228,7 +228,7 @@ This project demonstrates practical full-stack development concepts, including:
 
 ## 👨‍💻 Author
 
-Developed as part of Programming Hero Level 2 – Assignment 7.
+
 
 **Project Name:** SwiftDrop  
 **Project Type:** Courier & Logistics Management Platform
